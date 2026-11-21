@@ -1,0 +1,60 @@
+LAB 10 - JENKINS CI/CD PIPELINE
+Student: Christia Daoud
+
+1. OBJECTIVE
+
+The objective of this lab was to implement a Jenkins CI/CD
+pipeline for a Python application, automating code quality
+checks, unit testing, coverage analysis, security scanning,
+and deployment.
+
+2. IMPLEMENTATION
+
+A Python application was created with an automated unit
+test using pytest.
+
+The Jenkins pipeline was configured to retrieve the project
+from GitHub and execute six stages:
+
+Setup:
+Created a Python virtual environment and installed dependencies.
+
+Lint:
+Used Flake8 to verify Python code quality.
+
+Test:
+Executed automated unit tests using pytest.
+
+Coverage:
+Used coverage.py to measure test coverage and generate
+an HTML coverage report.
+
+Security Scan:
+Used Bandit to scan the Python application for security issues.
+
+Deploy:
+Executed a local deployment script that copied the application
+to a deployment directory and verified its execution.
+
+3. RESULTS
+
+Jenkins Build: #1
+Final Status: SUCCESS
+
+Setup: PASSED
+Lint: PASSED
+Test: PASSED (1 test)
+Coverage: PASSED (75%)
+Security Scan: PASSED (0 issues identified)
+Deploy: PASSED
+
+4. CONCLUSION
+
+The Jenkins CI/CD pipeline was successfully implemented.
+
+All six stages executed successfully, demonstrating automated
+testing, code coverage analysis, security scanning, and
+local deployment.
+
+GitHub Repository:
+https://github.com/christiadaoud/lab10-ChristiaDaoud

@@ -1,0 +1,74 @@
+pipeline {
+    agent any
+
+    environment {
+        VIRTUAL_ENV = 'venv'
+    }
+
+    stages {
+        stage('Setup') {
+            steps {
+                sh '''
+                    python3 -m venv "$VIRTUAL_ENV"
+                    "$VIRTUAL_ENV/bin/python" -m pip install -r requirements.txt
+                '''
+            }
+        }
+
+        stage('Lint') {
+            steps {
+                sh '''
+                    "$VIRTUAL_ENV/bin/python" -m flake8 app.py tests/
+                '''
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh '''
+                    "$VIRTUAL_ENV/bin/python" -m pytest -v
+                '''
+            }
+        }
+
+        stage('Coverage') {
+            steps {
+                sh '''
+                    "$VIRTUAL_ENV/bin/python" -m coverage run --source=app -m pytest
+                    "$VIRTUAL_ENV/bin/python" -m coverage report -m
+                    "$VIRTUAL_ENV/bin/python" -m coverage html
+                '''
+                archiveArtifacts artifacts: 'htmlcov/**', allowEmptyArchive: false
+            }
+        }
+
+        stage('Security Scan') {
+            steps {
+                sh '''
+                    "$VIRTUAL_ENV/bin/python" -m bandit -r app.py
+                '''
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh '''
+                    ./deploy.sh
+                '''
+                echo 'Deployment completed successfully.'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline execution completed.'
+        }
+        success {
+            echo 'All CI/CD stages passed successfully.'
+        }
+        failure {
+            echo 'Pipeline failed. Check the console output.'
+        }
+    }
+}
